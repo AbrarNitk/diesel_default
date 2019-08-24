@@ -1,12 +1,12 @@
 [package]
-name = "diesel_default"
+name = "diesel_mate"
 version = "0.1.0"
 authors = ["AbrarNitk <abrar.nitk@gmail.com>"]
 edition = "2018"
 
 [workspace]
 members = [
-    "diesel_default_derive",
+    "diesel_mate_derive",
     "examples"
 ]
 

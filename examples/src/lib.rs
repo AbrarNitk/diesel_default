@@ -3,7 +3,7 @@ extern crate diesel;
 extern crate failure;
 
 #[macro_use]
-extern crate diesel_default_derive;
+extern crate diesel_mate_derive;
 extern crate bigdecimal;
 
 use failure::Fail;

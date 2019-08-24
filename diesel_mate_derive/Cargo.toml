@@ -1,5 +1,5 @@
 [package]
-name = "diesel_default_derive"
+name = "diesel_mate_derive"
 version = "0.1.0"
 authors = ["AbrarNitk <abrar.nitk@gmail.com>"]
 edition = "2018"
