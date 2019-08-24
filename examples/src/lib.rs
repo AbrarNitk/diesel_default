@@ -8,15 +8,14 @@ extern crate bigdecimal;
 
 use failure::Fail;
 
-pub mod tables;
 mod db_test;
+pub mod tables;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
 pub enum ErrorKind {
     #[fail(display = "Value error")]
     ValueError,
 }
-
 
 pub type Result<T> = std::result::Result<T, failure::Error>;
 

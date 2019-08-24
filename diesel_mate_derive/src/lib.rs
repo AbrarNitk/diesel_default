@@ -7,82 +7,64 @@ extern crate darling;
 extern crate proc_macro;
 extern crate proc_macro2;
 
+use darling::{FromDeriveInput, FromMeta};
 use proc_macro::TokenStream;
-use proc_macro2::{Span};
-use syn::{DeriveInput, ItemStruct, AttributeArgs};
-use darling::{FromMeta, FromDeriveInput};
+use proc_macro2::Span;
+use syn::{AttributeArgs, DeriveInput, ItemStruct};
 
 #[derive(Default, FromMeta, Debug)]
+#[darling(default)]
 struct SaveArgs {
     output_type: String,
     dsl_name: String,
 }
 
-#[proc_macro_attribute]
-pub fn diesel_default(metadata: TokenStream, input: TokenStream) -> TokenStream {
-    let attr_args = parse_macro_input!(metadata as AttributeArgs);
-
-    let args = match SaveArgs::from_list(&attr_args){
-        Ok(v) => v,
-        Err(e) => { return e.write_errors().into();}
-    };
-
-    let input_clone = input.clone();
-    let derive_input = parse_macro_input!(input as DeriveInput);
-    let struct_item: ItemStruct = parse_macro_input!(input_clone as ItemStruct);
-    let ident = struct_item.ident;
-    let dsl = syn::Ident::new(&args.dsl_name, Span::call_site());
-    let output = syn::Ident::new(&args.output_type , Span::call_site());
-
-    quote!(
-
-        #derive_input
-
-        impl #ident {
-            pub fn save(&self, conn: &PgConnection) -> Result<#output> {
-                diesel::insert_into(dsl :: #dsl)
-                .values(self)
-                .get_result(conn)
-                .map_err( |e| e.into())
-            }
-
-            pub fn save_vec(values: &[Self], conn: &PgConnection) -> Result<usize> {
-                diesel::insert_into(dsl :: #dsl)
-                .values(values)
-                .execute(conn)
-                .map_err( |e| e.into())
-            }
-        }
-    ).into()
-}
-
-
-#[derive(Default, FromMeta, Debug)]
-#[darling(default)]
-struct Lorem {
-    ipsum: bool,
-    dolor: Option<String>,
-}
-
-#[derive(FromDeriveInput)]
-#[darling(attributes(my_crate), forward_attrs(allow, doc, cfg))]
-struct MyTraitOpts {
+#[derive(FromDeriveInput, Debug)]
+#[darling(attributes(save_opts), forward_attrs(allow, doc, cfg))]
+struct SaveOpts {
     ident: syn::Ident,
     attrs: Vec<syn::Attribute>,
-    lorem: Lorem,
+    opts: SaveArgs,
 }
 
-#[proc_macro_derive(MyTrait, attributes(my_crate))]
-pub fn check(input: TokenStream) -> TokenStream {
-    let attr_args = parse_macro_input!(input as DeriveInput);
+#[proc_macro_derive(DSave, attributes(save_opts))]
+pub fn diesel_save(input: TokenStream) -> TokenStream {
+    let input_clone = input.clone();
+    let derive_input = parse_macro_input!(input as DeriveInput);
 
-    let attrs = match MyTraitOpts::from_derive_input(&attr_args) {
+    let attrs = match SaveOpts::from_derive_input(&derive_input) {
         Ok(val) => val,
         Err(err) => {
             return err.write_errors().into();
         }
     };
 
-    println!("Lorem {:?}", attrs.lorem);
-    quote!().into()
+    println!("### Args {:?}", attrs);
+
+    let struct_item: ItemStruct = parse_macro_input!(input_clone);
+    let ident = struct_item.ident;
+    let output_type = syn::Ident::new(&attrs.opts.output_type, Span::call_site());
+    let dsl = syn::Ident::new(&attrs.opts.dsl_name, Span::call_site());
+
+    quote!(
+        impl DSave for #ident {
+            type Output = #output_type;
+            fn save(&self, conn: &PgConnection) -> Result<Self::Output>{
+                diesel::insert_into(dsl :: #dsl)
+                .values(self)
+                .get_result(conn)
+                .map_err( |e| e.into())
+            }
+
+            fn save_vec(values: &[Self], conn: &PgConnection) -> Result<usize>
+            where
+                Self: std::marker::Sized {
+                diesel::insert_into(dsl :: #dsl)
+                .values(values)
+                .execute(conn)
+                .map_err( |e| e.into())
+            }
+        }
+    )
+    .into()
 }
