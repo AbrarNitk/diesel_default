@@ -49,19 +49,6 @@ fn db_test() {
 
     let r: Result<ISkill> = Skill::new("abcd", "desc", "dsadfasdf").save(&conn);
     println!("{:?}", r);
-
-    //    let r: Result<ISkill> = diesel::insert_into(dsl::users_skill)
-    //        .values(Skill::new("abcd", "desc", "dsadfasdf"))
-    //        .get_result(&conn)
-    //        .map_err(|e|e.into());
-    //    println!("{:?}", r);
-
-    //    let result: Vec<ISkill> = dsl::users_skill.filter(dsl::id.gt(20))
-    //        .load::<ISkill>(&conn)
-    //        .expect("Error loading skills");
-    //    for x in result.iter() {
-    //        println!("{:?}", x);
-    //    }
 }
 
 //trait DSave {

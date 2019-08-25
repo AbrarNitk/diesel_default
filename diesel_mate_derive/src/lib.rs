@@ -15,7 +15,7 @@ use syn::{AttributeArgs, DeriveInput, ItemStruct};
 #[derive(Default, FromMeta, Debug)]
 #[darling(default)]
 struct SaveArgs {
-    output_type: String,
+    output_type: Option<String>,
     dsl_name: String,
 }
 
@@ -39,11 +39,9 @@ pub fn diesel_save(input: TokenStream) -> TokenStream {
         }
     };
 
-    println!("### Args {:?}", attrs);
-
     let struct_item: ItemStruct = parse_macro_input!(input_clone);
     let ident = struct_item.ident;
-    let output_type = syn::Ident::new(&attrs.opts.output_type, Span::call_site());
+    let output_type = syn::Ident::new(&attrs.opts.output_type.unwrap(), Span::call_site());
     let dsl = syn::Ident::new(&attrs.opts.dsl_name, Span::call_site());
 
     quote!(
