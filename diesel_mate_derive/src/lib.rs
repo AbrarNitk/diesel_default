@@ -67,7 +67,6 @@ pub fn diesel_save(input: TokenStream) -> TokenStream {
     .into()
 }
 
-
 #[derive(Default, FromMeta, Debug)]
 #[darling(default)]
 struct EncDecArgs {
@@ -101,7 +100,8 @@ pub fn encyption(input: TokenStream) -> TokenStream {
             }
         }
 
-    ).into()
+    )
+    .into()
 }
 
 #[proc_macro_derive(Decrypted, attributes(encdec_opts))]
@@ -122,5 +122,6 @@ pub fn decyption(input: TokenStream) -> TokenStream {
             }
         }
 
-    ).into()
+    )
+    .into()
 }
