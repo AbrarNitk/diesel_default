@@ -10,7 +10,7 @@ extern crate proc_macro2;
 use darling::{FromDeriveInput, FromMeta};
 use proc_macro::TokenStream;
 use proc_macro2::Span;
-use syn::{AttributeArgs, DeriveInput, ItemStruct};
+use syn::{DeriveInput, ItemStruct};
 
 #[derive(Default, FromMeta, Debug)]
 #[darling(default)]
@@ -65,4 +65,41 @@ pub fn diesel_save(input: TokenStream) -> TokenStream {
         }
     )
     .into()
+}
+
+
+#[derive(Default, FromMeta, Debug)]
+#[darling(default)]
+struct EncDecArgs {
+    sub_key: String,
+}
+
+#[derive(FromDeriveInput, Debug)]
+#[darling(attributes(encdec_opts), forward_attrs(allow, doc, cfg))]
+struct EncDecOpts {
+    ident: syn::Ident,
+    attrs: Vec<syn::Attribute>,
+    opts: EncDecArgs,
+}
+
+#[proc_macro_derive(Encrypted, attributes(encdec_opts))]
+pub fn encyption(input: TokenStream) -> TokenStream {
+    let derive_input = parse_macro_input!(input as DeriveInput);
+    let attrs = match EncDecOpts::from_derive_input(&derive_input) {
+        Ok(val) => val,
+        Err(err) => {
+            return err.write_errors().into();
+        }
+    };
+    let sub_key = attrs.opts.sub_key;
+    let ident = derive_input.ident;
+    quote!(
+
+        impl Encrypted for #ident {
+            fn ekey(&self) -> Result<String> {
+                encode_ekey_util(self.id, #sub_key)
+            }
+        }
+
+    ).into()
 }

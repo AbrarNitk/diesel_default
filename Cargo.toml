@@ -7,7 +7,8 @@ edition = "2018"
 [workspace]
 members = [
     "diesel_mate_derive",
-    "examples"
+    "examples",
+    "encrypted_id"
 ]
 
 [dependencies]
