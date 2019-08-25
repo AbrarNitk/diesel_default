@@ -1,26 +1,11 @@
 use crate::Result;
-
-pub trait Encrypted {
-    fn ekey(&self) -> Result<String>;
-}
-
-pub trait Decrypted {
-    fn dkey(&self, ekey: &str) -> Result<u64>;
-}
+use encrypted_id::prelude::*;
 
 #[derive(Debug, Default, Encrypted, Decrypted)]
-#[encdec_opts(opts(sub_key = "endemo"))]
+#[encdec_opts(opts(sub_key = "enky_demo_sub_key"))]
 pub struct EncyDemo {
     pub id: u64,
     pub name: String,
-}
-
-pub fn encode_ekey_util(id: u64, sub_key: &str) -> Result<String> {
-    Ok("".to_string())
-}
-
-pub fn decode_ekey_util(ekey: &str, sub_key: &str) -> Result<u64> {
-    Ok(5)
 }
 
 #[cfg(test)]
@@ -28,8 +13,14 @@ mod tests {
     use super::*;
     #[test]
     fn enc_test() {
-        let e = EncyDemo::default();
-        //println!("{}", e.ekey());
-        println!("{:?}", e.dkey("bakchodi"));
+        init_encrypt_conf("se(vh!38e21qca#9m7g0#7tyq+a*z#imfjr10&iezsfmh6l)v(");
+        let e = EncyDemo {
+            id: 5,
+            name: "foo".to_string(),
+        };
+        let ekey = e.ekey().unwrap();
+        let dkey = e.dkey(&ekey).unwrap();
+        assert_eq!("mZZLspleIzJqmKLa2Oio_g", ekey);
+        assert_eq!(5, dkey);
     }
 }

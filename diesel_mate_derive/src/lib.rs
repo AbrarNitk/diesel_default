@@ -96,7 +96,7 @@ pub fn encyption(input: TokenStream) -> TokenStream {
 
         impl Encrypted for #ident {
             fn ekey(&self) -> Result<String> {
-                encode_ekey_util(self.id, #sub_key)
+                encode_ekey_util(self.id as u64, #sub_key)
             }
         }
 
