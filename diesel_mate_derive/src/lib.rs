@@ -103,3 +103,24 @@ pub fn encyption(input: TokenStream) -> TokenStream {
 
     ).into()
 }
+
+#[proc_macro_derive(Decrypted, attributes(encdec_opts))]
+pub fn decyption(input: TokenStream) -> TokenStream {
+    let derive_input = parse_macro_input!(input as DeriveInput);
+    let attrs = match EncDecOpts::from_derive_input(&derive_input) {
+        Ok(val) => val,
+        Err(err) => {
+            return err.write_errors().into();
+        }
+    };
+    let sub_key = attrs.opts.sub_key;
+    let ident = derive_input.ident;
+    quote!(
+        impl Decrypted for #ident {
+            fn dkey(&self, ekey: &str) -> Result<u64> {
+                decode_ekey_util(ekey, #sub_key)
+            }
+        }
+
+    ).into()
+}
