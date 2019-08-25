@@ -47,8 +47,8 @@ fn db_test() {
     let conn: PgConnection = PgConnection::establish(database_url)
         .expect(&format!("Error connecting to {}", database_url));
 
-    let r: Result<ISkill> = Skill::new("abcd", "desc", "dsadfasdf").save(&conn);
-    println!("{:?}", r);
+    // let r: Result<ISkill> = Skill::new("abcd", "desc", "dsadfasdf").save(&conn);
+    // println!("{:?}", r);
 }
 
 //trait DSave {

@@ -9,6 +9,7 @@ extern crate bigdecimal;
 use failure::Fail;
 
 mod db_test;
+mod endec;
 pub mod tables;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Fail)]
