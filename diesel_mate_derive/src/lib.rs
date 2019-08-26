@@ -82,7 +82,7 @@ struct EncDecOpts {
 }
 
 #[proc_macro_derive(Encrypted, attributes(encdec_opts))]
-pub fn encyption(input: TokenStream) -> TokenStream {
+pub fn encryption(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
     let attrs = match EncDecOpts::from_derive_input(&derive_input) {
         Ok(val) => val,
@@ -105,7 +105,7 @@ pub fn encyption(input: TokenStream) -> TokenStream {
 }
 
 #[proc_macro_derive(Decrypted, attributes(encdec_opts))]
-pub fn decyption(input: TokenStream) -> TokenStream {
+pub fn decryption(input: TokenStream) -> TokenStream {
     let derive_input = parse_macro_input!(input as DeriveInput);
     let attrs = match EncDecOpts::from_derive_input(&derive_input) {
         Ok(val) => val,
