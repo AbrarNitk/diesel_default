@@ -3,11 +3,11 @@ name = "diesel_mate_derive"
 version = "0.1.0"
 authors = ["AbrarNitk <abrar.nitk@gmail.com>"]
 edition = "2018"
-description = "Diesel defaults attributes macros"
+description = "Diesel mate proc macros"
 license = "MIT"
 include = ["src/**/*", "Cargo.toml"]
 readme = "README.md"
-keywords = ["defaults", "save", "insert", "delete"]
+keywords = ["defaults", "save", "insert", "delete", "filter_id", "find_one"]
 repository = "https://github.com/AbrarNitk/diesel_default"
 
 [lib]
