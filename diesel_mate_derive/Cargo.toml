@@ -8,7 +8,7 @@ license = "MIT"
 include = ["src/**/*", "Cargo.toml"]
 readme = "README.md"
 keywords = ["defaults", "save", "insert", "delete", "filter_id", "find_one"]
-repository = "https://github.com/AbrarNitk/diesel_default"
+repository = "https://github.com/AbrarNitk/diesel_mate"
 
 [lib]
 proc-macro = true
