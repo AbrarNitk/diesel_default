@@ -2,7 +2,6 @@
 extern crate quote;
 #[macro_use]
 extern crate syn;
-#[macro_use]
 extern crate darling;
 extern crate proc_macro;
 extern crate proc_macro2;
