@@ -1,4 +1,4 @@
-# diesel_mate
+# Encryption and Decryption
 Some default methods for diesel related structs
 
 * Encryption and Decryption in action
