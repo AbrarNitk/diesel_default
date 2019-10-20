@@ -19,10 +19,37 @@ mod tests {
     #[test]
     fn enc_test() {
         // We have to set secret key only single time based on that it will encrypt and decrypt key. 
-        init_encrypt_conf("se(vh!38e21qca#9m7g0#5plq+a*z#imfjr10&iezsfmh6l)v(");
+        init_encrypt_conf("df(vh!3*8e21@qca#3)w#7ta*z#!bhsde43&#iez3sf5m1#h6l");
         let ekey = encode_ekey_util(5, "sub_key_foo").unwrap();
         let dkey = decode_ekey_util(&ekey, "sub_key_foo").unwrap();
-        assert_eq!("51N8eu8UTVCCZiyLXQuARQ", ekey);
+        assert_eq!("E86VGQhfxb_9rxSfjnBqKg", ekey);
+        assert_eq!(5, dkey);
+    }
+}
+
+```
+
+## Using with struct 
+```rust
+use encrypted_id::{prelude::*};
+#[derive(Debug, Default, Encrypted, Decrypted)]
+#[encdec_opts(opts(sub_key = "enky_demo_sub_key"))]
+pub struct EncyDemo {
+    pub id: u64,
+    pub name: String,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn enc_test() {
+        // We have to set secret key only single time based on that it will encrypt and decrypt key.           
+        init_encrypt_conf("df(vh!3*8e21@qca#3)w#7ta*z#!bhsde43&#iez3sf5m1#h6l");
+        let e = EncyDemo{id: 5, name: "foo".to_string()};
+        let ekey = e.ekey().unwrap();
+        let dkey = e.dkey(&ekey).unwrap();
+        assert_eq!("E86VGQhfxb_9rxSfjnBqKg", ekey);
         assert_eq!(5, dkey);
     }
 }
