@@ -2,7 +2,7 @@
 Some default methods for diesel related structs
 
 * Encryption and Decryption in action
-* To make any struct encryptable, It must have an id field of type int necessary.
+* To make any struct encryptable, It must have an id field of type int(u64) necessary.
 * To make any struct encryptable or decryptable, It must define sub_key to encrypt and decrypt key individually.
 * Before using encryptable or decryptable, It must have initialize secret_key initially.
 * Secret key length depends upon how much good encryption that you want (64 byte recommended).
